@@ -141,7 +141,8 @@ let animProgress = 0;
 let animSrcX = 0, animSrcY = 0, animDstX = 0, animDstY = 0;
 let animPlayer = 0;
 let moveFromCol = 0, moveFromRow = 0, moveToCol = 0, moveToRow = 0;
-let moveEnemy = null;
+let moveEnemies = []; // all enemies to shoot in sequence
+let moveEnemyIdx = 0; // current enemy being shot
 let moveDestType = CELL_SPACE;
 let explodeFrame = 0;
 let explodeX = 0, explodeY = 0, explodePlayer = 0;
@@ -589,23 +590,21 @@ function getValidMoves(col, row, dieValue) {
     if (dest !== CELL_SPACE && dest !== CELL_FREE && dest !== CELL_SINK) continue;
 
     let blocked = false;
-    let enemy = null;
+    const enemies = [];
     for (let step = 1; step < dieValue; step++) {
       const sc = col + dc * step;
       const sr = row + dr * step;
       if (sc < 0 || sc > 15 || sr < 0 || sr > 15) { blocked = true; break; }
       const cell = gBoard[sc][sr];
       if (cell >= 0 && cell <= 3) {
-        // Friendly marbles: jump over freely
         if (isTeammate(owner, cell)) continue;
-        // Enemy marble: record first hit only (can jump over all)
-        if (enemy === null && !isEdge(sc, sr)) {
-          enemy = { col: sc, row: sr, player: cell };
+        if (!isEdge(sc, sr)) {
+          enemies.push({ col: sc, row: sr, player: cell });
         }
       }
     }
     if (blocked) continue;
-    moves.push({ col: nc, row: nr, enemy, destType: dest });
+    moves.push({ col: nc, row: nr, enemies, destType: dest });
   }
   return moves;
 }
@@ -684,11 +683,11 @@ function drawSinkholeSprite(col, row) {
 }
 
 function drawAllBoardPieces() {
-  // Draw sinkholes first (under marbles)
+  // Draw sinkholes first (under everything)
   for (let c = 0; c < 16; c++)
     for (let r = 0; r < 16; r++)
       if (gBoard[c][r] === CELL_SINK) drawSinkholeSprite(c, r);
-  // Free marbles
+  // Free marbles (drawn after sinkholes, above highlights)
   for (let c = 0; c < 16; c++)
     for (let r = 0; r < 16; r++)
       if (gBoard[c][r] === CELL_FREE) drawFreeMarbleSprite(c, r);
@@ -708,10 +707,19 @@ function drawSelectionRing(col, row) {
 
 function drawValidMoveIndicator(col, row) {
   if (!images.hole || !images.hole.complete) return;
-  // Frames 0-8 at 11px each, opaque (NOCK), gFrame clamped to 8
   const frame = Math.min(Math.floor(holeAnimFrame), 8);
-  ctx.drawImage(images.hole, 0, 11 * frame, 25, 11,
-    marbleX(col), marbleY(row), 25, 11);
+  const x = marbleX(col), y = marbleY(row);
+  ctx.drawImage(images.hole, 0, 11 * frame, 25, 11, x, y, 25, 11);
+  // After hole is fully open, apply pulsing glow overlay (like original palette animation)
+  if (frame >= 8) {
+    const gv = glowFrame > 25 ? 50 - glowFrame : glowFrame;
+    const alpha = (gv / 50) * 0.6;
+    const gr = Math.round(gv);
+    const gg = Math.min(255, Math.round(7 * gv));
+    const gb = Math.min(255, Math.round(10 * gv));
+    ctx.fillStyle = "rgba(" + gr + "," + gg + "," + gb + "," + alpha + ")";
+    ctx.fillRect(x + 4, y + 2, 17, 7);
+  }
 }
 
 function drawHoverHighlight(col, row) {
@@ -1064,13 +1072,12 @@ function drawHelpWindow() {
     ["wndTxt", "one of your marbles that many spaces in a straight"],
     ["wndTxt", "line (up, down, left or right)."],
     ["", ""],
-    ["wndTxt", "SHOOTING: If an enemy marble is in your path, a"],
-    ["wndTxt", "bullet is fired at the first enemy, eliminating it"],
-    ["wndTxt", "and leaving a free marble (F) in its place."],
+    ["wndTxt", "SHOOTING: If enemy marbles are in your path,"],
+    ["wndTxt", "bullets are fired at ALL enemies, eliminating"],
+    ["wndTxt", "them and leaving free marbles (F) in their place."],
     ["", ""],
     ["wndTxt", "JUMPING: Your marble can jump over any number of"],
-    ["wndTxt", "friendly marbles and additional enemies in its path."],
-    ["wndTxt", "Only the first enemy encountered gets shot."],
+    ["wndTxt", "friendly marbles in its path."],
     ["", ""],
     ["wndTxt", "FREE MARBLES: Landing on an (F) space gives you a"],
     ["wndTxt", "new marble on your home edge."],
@@ -1142,7 +1149,7 @@ function aiPickMove() {
         const moves = getValidMoves(c, r, dice[d]);
         for (const m of moves) {
           let score = Math.random() * 2;
-          if (m.enemy) score += 50;
+          if (m.enemies.length > 0) score += 50 * m.enemies.length;
           if (m.destType === CELL_FREE) score += 30;
           if (m.destType === CELL_SINK) score -= 80;
           if (isEdge(c, r) && !isEdge(m.col, m.row)) score += 10;
@@ -1151,7 +1158,7 @@ function aiPickMove() {
           score += countDanger(c, r, p) * 3;
           if (score > bestScore) {
             bestScore = score;
-            bestMove = { fromCol: c, fromRow: r, toCol: m.col, toRow: m.row, enemy: m.enemy, destType: m.destType };
+            bestMove = { fromCol: c, fromRow: r, toCol: m.col, toRow: m.row, enemies: m.enemies, destType: m.destType };
             bestDie = d;
           }
         }
@@ -1297,23 +1304,25 @@ function endRound(winner) {
   }
 }
 
-function executeMove(fromCol, fromRow, toCol, toRow, enemy, destType, dieIdx) {
+function executeMove(fromCol, fromRow, toCol, toRow, enemies, destType, dieIdx) {
   diceUsed[dieIdx] = true;
   animPlayer = gBoard[fromCol][fromRow];
   moveFromCol = fromCol; moveFromRow = fromRow;
   moveToCol = toCol; moveToRow = toRow;
-  moveEnemy = enemy;
+  moveEnemies = enemies || [];
+  moveEnemyIdx = 0;
   moveDestType = destType;
   animProgress = 0;
 
   // Remove marble from source
   gBoard[fromCol][fromRow] = CELL_SPACE;
 
-  if (enemy) {
-    // Bullet from source to enemy (offset +10, -8 like original)
+  if (moveEnemies.length > 0) {
+    // Bullet from source to first enemy
     gameState = ST_BULLET_MOVE;
+    const e = moveEnemies[0];
     animSrcX = marbleX(fromCol) + 10; animSrcY = marbleY(fromRow) - 8;
-    animDstX = marbleX(enemy.col) + 10; animDstY = marbleY(enemy.row) - 8;
+    animDstX = marbleX(e.col) + 10; animDstY = marbleY(e.row) - 8;
   } else {
     // Flying marble (offset +2, -5 like original)
     gameState = ST_MARBLE_MOVE;
@@ -1419,7 +1428,7 @@ function update(dt) {
       if (stateTimer > 350) {
         const { move, die } = aiPickMove();
         if (move) {
-          executeMove(move.fromCol, move.fromRow, move.toCol, move.toRow, move.enemy, move.destType, die);
+          executeMove(move.fromCol, move.fromRow, move.toCol, move.toRow, move.enemies, move.destType, die);
         } else {
           // Mark remaining dice used
           diceUsed[0] = true; diceUsed[1] = true;
@@ -1431,12 +1440,13 @@ function update(dt) {
     case ST_BULLET_MOVE:
       animProgress = Math.min(1, animProgress + dt * 0.004);
       if (animProgress >= 1) {
-        // Enemy explodes
-        explodeX = marbleX(moveEnemy.col);
-        explodeY = marbleY(moveEnemy.row);
-        explodePlayer = moveEnemy.player;
+        // Current enemy explodes
+        const curEnemy = moveEnemies[moveEnemyIdx];
+        explodeX = marbleX(curEnemy.col);
+        explodeY = marbleY(curEnemy.row);
+        explodePlayer = curEnemy.player;
         explodeFrame = 0;
-        gBoard[moveEnemy.col][moveEnemy.row] = CELL_FREE;
+        gBoard[curEnemy.col][curEnemy.row] = CELL_FREE;
         gameState = ST_MARBLE_EXPLODE;
         playSound("explode");
       }
@@ -1445,11 +1455,22 @@ function update(dt) {
     case ST_MARBLE_EXPLODE:
       explodeFrame += dt * 0.02;
       if (explodeFrame >= 12) {
-        // Now move marble from source to destination
-        gameState = ST_MARBLE_MOVE;
-        animProgress = 0;
-        animSrcX = marbleX(moveFromCol) + 2; animSrcY = marbleY(moveFromRow) - 5;
-        animDstX = marbleX(moveToCol) + 2; animDstY = marbleY(moveToRow) - 5;
+        moveEnemyIdx++;
+        if (moveEnemyIdx < moveEnemies.length) {
+          // More enemies to shoot — fire next bullet
+          const prev = moveEnemies[moveEnemyIdx - 1];
+          const next = moveEnemies[moveEnemyIdx];
+          gameState = ST_BULLET_MOVE;
+          animProgress = 0;
+          animSrcX = marbleX(prev.col) + 10; animSrcY = marbleY(prev.row) - 8;
+          animDstX = marbleX(next.col) + 10; animDstY = marbleY(next.row) - 8;
+        } else {
+          // All enemies shot — now move marble from source to destination
+          gameState = ST_MARBLE_MOVE;
+          animProgress = 0;
+          animSrcX = marbleX(moveFromCol) + 2; animSrcY = marbleY(moveFromRow) - 5;
+          animDstX = marbleX(moveToCol) + 2; animDstY = marbleY(moveToRow) - 5;
+        }
       }
       break;
 
@@ -1465,9 +1486,9 @@ function update(dt) {
           gBoard[moveToCol][moveToRow] = animPlayer;
           freeMarbleEdgePos = findFreeEdgeSpot(animPlayer);
           if (freeMarbleEdgePos) {
-            gBoard[freeMarbleEdgePos.c][freeMarbleEdgePos.r] = animPlayer;
+            // Don't place marble on board yet — wait for rise animation to finish
             gameState = ST_FREE_GAIN;
-            riseFrame = 0; // starts at 0, rises to 20+
+            riseFrame = 0;
             playSound("free");
           } else {
             playSound("cant");
@@ -1484,6 +1505,8 @@ function update(dt) {
       // Original: gFrame 0→20+ at VEL_SHOWMARBLE=0.03, rise sound at completion
       riseFrame += dt * 0.03;
       if (riseFrame > 20) {
+        // Now place the marble on the board
+        gBoard[freeMarbleEdgePos.c][freeMarbleEdgePos.r] = animPlayer;
         playSound("show");
         nextDieOrPlayer();
       }
@@ -1550,6 +1573,22 @@ function render() {
   // Main game rendering
   drawBoard();
 
+  // Valid move indicators drawn BEFORE marbles (original order: board → highlights → marbles)
+  if (gameState === ST_GET_INPUT && validMoves.length > 0) {
+    const bp = screenToBoard(mouseX, mouseY);
+    for (const m of validMoves) {
+      drawValidMoveIndicator(m.col, m.row);
+    }
+    if (bp.col >= 0) {
+      for (const m of validMoves) {
+        if (m.col === bp.col && m.row === bp.row) {
+          drawHoverHighlight(m.col, m.row);
+          break;
+        }
+      }
+    }
+  }
+
   if (gameState === ST_MARBLES_SHOW) {
     ctx.globalAlpha = showMarblesProgress;
     drawAllBoardPieces();
@@ -1561,23 +1600,6 @@ function render() {
   // Selection ring
   if (selectedMarble && (gameState === ST_GET_INPUT)) {
     drawSelectionRing(selectedMarble.col, selectedMarble.row);
-  }
-
-  // Valid move indicators + hover highlight
-  if (gameState === ST_GET_INPUT && validMoves.length > 0) {
-    const bp = screenToBoard(mouseX, mouseY);
-    for (const m of validMoves) {
-      drawValidMoveIndicator(m.col, m.row);
-    }
-    // Hover highlight if mouse is over a valid move
-    if (bp.col >= 0) {
-      for (const m of validMoves) {
-        if (m.col === bp.col && m.row === bp.row) {
-          drawHoverHighlight(m.col, m.row);
-          break;
-        }
-      }
-    }
   }
 
   // Bullet
@@ -1711,7 +1733,7 @@ function handleClick(mx, my) {
           for (let d = 0; d < 2; d++) { if (!diceUsed[d]) { dieIdx = d; break; } }
         }
         if (dieIdx >= 0) {
-          executeMove(fromCol, fromRow, m.col, m.row, m.enemy, m.destType, dieIdx);
+          executeMove(fromCol, fromRow, m.col, m.row, m.enemies, m.destType, dieIdx);
         }
         return;
       }

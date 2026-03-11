@@ -13,8 +13,8 @@ Elimination III is a multiplayer board game where 2-4 players compete on a 16x16
 ### Rules
 
 - **Movement**: Roll two dice each turn. Use each die value to move one marble that many spaces in a cardinal direction (up/down/left/right).
-- **Shooting**: If an enemy marble is in your path, a bullet is fired at the first enemy encountered, eliminating it and leaving a free marble pickup in its place.
-- **Jumping**: Marbles can jump over any number of friendly or enemy marbles in their path (only the first enemy gets shot).
+- **Shooting**: If enemy marbles are in your path, bullets are fired at ALL enemies encountered, eliminating them and leaving free marble pickups in their place.
+- **Jumping**: Marbles can jump over any number of friendly marbles in their path.
 - **Free Marbles**: Landing on a free marble (F) grants you a new marble on your home edge.
 - **Sinkholes**: Hidden traps scattered across the board. Landing on one destroys your marble and the sinkhole.
 - **Winning**: The last player (or team) with marbles remaining wins.
