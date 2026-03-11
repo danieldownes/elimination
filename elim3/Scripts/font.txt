@@ -1,0 +1,193 @@
+#------------------------------------------------------
+# Window Title Font
+#------------------------------------------------------
+
+>1
+  @cell-width "18"
+  @cell-hight "16"
+  @char-hight "13"
+  @image      "c:\projects\elim3\fonts\text_xa.bmp"
+  @symbols-a  "5,6,8,10,9,15,13,5,7,8,8,11,6,7,6,6"
+  @numbers    "10,10,10,10,10,10,10,10,10,10"
+  @symbols-b  "6,6,10,10,10,11,17"
+  @caps-a     "12,12,12,12,12,10,13,12,4,9,12,10,14"
+  @caps-b     "11,13,11,13,12,10,10,12,11,16,11,11,10"
+  @symbols-c  "7,8,6,11,10,6"
+  @lowers-a   "9,10,9,10,9,8,10,10,5,7,9,4,14"
+  @lowers-b   "10,9,10,10,6,9,6,10,9,13,9,9,8"
+>1
+
+#------------------------------------------------------
+# Player Name Font
+#------------------------------------------------------
+
+>2
+  @cell-width "15"
+  @cell-hight "13"
+  @char-hight "11"
+  @image      "c:\projects\elim3\fonts\text_xb.bmp"
+  @symbols-a  "5,5,6,7,9,13,10,3,6,5,7,9,5,5,5,5"
+  @numbers    "8,9,8,9,8,9,8,9,8,9"
+  @symbols-b  "5,5,9,9,9,8,15"
+  @caps-a     "10,10,11,12,10,9,12,10,5,8,10,8,12"
+  @caps-b     "11,11,10,11,11,10,9,11,9,15,10,10,9"
+  @symbols-c  "5,5,5,7,8,4"
+  @lowers-a   "8,9,8,8,9,4,9,8,4,4,8,4,12"
+  @lowers-b   "8,9,8,9,5,8,5,9,7,11,7,8,7"
+>2
+
+#------------------------------------------------------
+# Main Text Font (Active)
+#------------------------------------------------------
+
+>3
+  @cell-width "13"
+  @cell-hight "11"
+  @char-hight "9"
+  @image      "c:\projects\elim3\fonts\text_xd.bmp"
+  @symbols-a  "3,5,5,7,8,11,8,3,5,5,6,7,4,5,4,4"
+  @numbers    "7,8,7,8,7,8,7,8,7,8"
+  @symbols-b  "4,4,7,8,7,8,12"
+  @caps-a     "8,9,9,10,8,8,10,10,4,7,8,8,10"
+  @caps-b     "10,10,8,10,10,8,8,10,8,13,8,8,8"
+  @symbols-c  "4,4,4,7,6,5"
+  @lowers-a   "6,7,7,7,8,4,7,7,3,3,7,3,10"
+  @lowers-b   "8,7,7,7,5,7,4,7,7,8,7,6,7"
+>3
+
+#------------------------------------------------------
+# Main Text Font (Hilighted)
+#------------------------------------------------------
+
+>4
+  @cell-width "13"
+  @cell-hight "11"
+  @char-hight "9"
+  @image      "c:\projects\elim3\fonts\text_xc.bmp"
+  @symbols-a  "3,5,5,7,8,11,8,3,5,5,6,7,4,5,4,4"
+  @numbers    "7,8,7,8,7,8,7,8,7,8"
+  @symbols-b  "4,4,7,8,7,8,12"
+  @caps-a     "8,9,9,10,8,8,10,10,4,7,8,8,10"
+  @caps-b     "10,10,8,10,10,8,8,10,8,13,8,8,8"
+  @symbols-c  "4,4,4,7,6,5"
+  @lowers-a   "6,7,7,7,8,4,7,7,3,3,7,3,10"
+  @lowers-b   "8,7,7,7,5,7,4,7,7,8,7,6,7"
+>4
+
+#------------------------------------------------------
+# Main Text Font (Inactive)
+#------------------------------------------------------
+
+>5
+  @cell-width "13"
+  @cell-hight "11"
+  @char-hight "9"
+  @image      "c:\projects\elim3\fonts\text_xe.bmp"
+  @symbols-a  "3,5,5,7,8,11,8,3,5,5,6,7,4,5,4,4"
+  @numbers    "7,8,7,8,7,8,7,8,7,8"
+  @symbols-b  "4,4,7,8,7,8,12"
+  @caps-a     "8,9,9,10,8,8,10,10,4,7,8,8,10"
+  @caps-b     "10,10,8,10,10,8,8,10,8,13,8,8,8"
+  @symbols-c  "4,4,4,7,6,5"
+  @lowers-a   "6,7,7,7,8,4,7,7,3,3,7,3,10"
+  @lowers-b   "8,7,7,7,5,7,4,7,7,8,7,6,7"
+>5
+
+#------------------------------------------------------
+# Small Font
+#------------------------------------------------------
+
+>6
+  @cell-width "12"
+  @cell-hight "10"
+  @char-hight "8"
+  @image      "c:\projects\elim3\fonts\text_xf.bmp"
+  @symbols-a  "3,2,4,6,6,10,7,2,3,3,4,6,2,6,2,4"
+  @numbers    "6,4,6,6,6,6,6,6,6,6"
+  @symbols-b  "3,3,6,6,6,6,11"
+  @caps-a     "8,7,7,7,6,6,8,7,2,5,7,6,8"
+  @caps-b     "7,8,6,8,7,7,6,7,8,12,7,8,7"
+  @symbols-c  "3,3,4,6,7,3"
+  @lowers-a   "6,6,6,6,6,4,6,6,2,2,5,2,8"
+  @lowers-b   "6,6,6,6,4,6,3,6,6,10,6,6,6"
+>6
+
+
+#------------------------------------------------------
+# Main Text Font (Inactive)
+#------------------------------------------------------
+
+>script
+
+  LOAD cmndline
+
+  VAR  temp$
+  VAR  i$
+
+  # output height & width & char hight
+  SAVE uint8$ cell-width
+  SAVE uint8$ cell-hight
+  SAVE uint8$ char-hight
+
+  # output symbol-a spacing
+  SET  i 0$
+  LOOP i 15$
+    ARAY temp   symbols-a[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output numbers spacing
+  SET  i 0$
+  LOOP i 9$
+    ARAY temp   numbers[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output symbols-b spacing
+  SET  i 0$
+  LOOP i 6$
+    ARAY temp   symbols-b[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output caps-a spacing
+  SET  i 0$
+  LOOP i 12$
+    ARAY temp   caps-a[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output caps-b spacing
+  SET  i 0$
+  LOOP i 12$
+    ARAY temp   caps-b[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output symbols-c spacing
+  SET  i 0$
+  LOOP i 5$
+    ARAY temp   symbols-c[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output lowers-a spacing
+  SET  i 0$
+  LOOP i 12$
+    ARAY temp   lowers-a[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # output lowers-b spacing
+  SET  i 0$
+  LOOP i 12$
+    ARAY temp   lowers-b[i]$
+    SAVE uint8$ temp
+  NEXT i
+
+  # create xmp file
+  EXE  c:\utilities\bm8$ image
+  FILE filedest          0$
+  FREM filedest
+
+>script

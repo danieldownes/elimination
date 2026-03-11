@@ -1,0 +1,63 @@
+Object:
+	The object of the game is to remove all of your
+opponent's marbles from the board.
+
+Moving Marbles:
+1.	To move a marble: click on the marble, then
+	click the space you wish to move the marble to.
+	(It will not move if the dice won't allow it.)
+2.	When you select a marble, if the 'Show Moves'
+	menu item in the 'Options' menu is checked,
+	then all possible moves will be selected in red.
+	After moving the first marble you are free to
+	move the same marble or click on a new marble and
+	move it.
+
+Rules:
+1.	You may only move a marble left or right when moving
+	it out from behind the line. (Right for gold, left
+	for teal.)
+2.	After a marble is moved from behind the line it can
+	never be moved back behind the line.
+3.	Once out onto the main board a marble can be moved
+	in any direction.
+4.	If an opponent jumps any of your marbles they are
+	then removed from the board.
+5.	When a marble is removed an 'F' is put on the board
+	in its place. Any player who lands on it will get
+	an extra marble placed in an empty space behind
+	that player's line.  (If there are no empty spaces
+	the player will not get an extra marble and the free
+	marble will be wasted.)
+6.	Some of the spaces are sink holes, so when a marble
+	lands on one, the marble will sink in.  Any marble
+	landing in that space later will sit on top of the
+	old marble and not sink in.
+
+Scoring:
+1.	Even if you have more marbles remaining than your
+	opponent, your opponent could still have a higher
+	score.  You can use the points (which are
+	displayed to the right of the players' names) if
+	you are playing a tournament where you would add
+	up the total scores from all of the games.
+2.	Each marble a player jumps is worth 100 points.
+	Each free marble collected is worth 50 points
+	(whether a free marble can form or not).
+
+Game Options:
+1.	Because most personal computers run at different
+	speeds, you can change the speed of the animation.
+	To change the speed, check the appropriate sub-menu
+	item in the 'Animation' menu item.  (The 'Animation'
+	menu item is located under 'Options'.)
+2.	'Music', 'Sound Effects', and 'Show Moves' are self-
+	explanatory.  A check mark means that they are on.
+3.	To activate the computer player make sure to check
+	the 'Computer Player' check box in the first window.
+4.	To change the number of sink holes in the board,
+	click the 'Options' button in the first window.
+	Next type the desired number of sink holes and
+	click 'OK'.
+5.	The current settings including the player names are
+	saved when the game is closed.

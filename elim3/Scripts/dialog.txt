@@ -1,0 +1,267 @@
+#----------------------------------------------------------
+# Message Box
+#----------------------------------------------------------
+>1
+  @title       " "
+  @width       "250"
+  @height      "148"
+  @nnums       "0"
+  @nbtns       "0"
+  @ntxts       "0"
+  @mbtn1       "#"
+  @mbtn2       " "
+  @mbtn3       " "
+>1
+
+#----------------------------------------------------------
+# New Game Box
+#----------------------------------------------------------
+>2
+  @title       "New Game"
+  @width       "348"
+  @height      "256"
+  @nnums       "2"
+  @nbtns       "2"
+  @ntxts       "4"
+  @mbtn1       "Network"
+  @mbtn2       "Load"
+  @mbtn3       "Exit"
+
+  #text boxes
+  @txt-dst1    "167,57,328,77"
+  @txt-dst2    "167,83,328,103"
+  @txt-dst3    "167,109,328,129"
+  @txt-dst4    "167,135,328,155"
+
+  #num controls data
+  @num-title1  "Sinkholes:"
+  @num-title2  "Games:"
+  @num-data1   "15,189,80,65,75,0,1"
+  @num-data2   "177,189,79,65,5,1,1"
+
+  #button data
+  @btn-type1   "2"
+  @btn-type2   "1"
+  @btn-dst1    "31,229,106,251"
+  @btn-dst2    "6,230,26,250"
+>2
+
+
+#----------------------------------------------------------
+# Connect to network game
+#----------------------------------------------------------
+>3
+  @title       "Connect To Network Game"
+  @width       "278"
+  @height      "184"
+  @nnums       "0"
+  @nbtns       "4"
+  @ntxts       "3"
+  @mbtn1       "Connect"
+  @mbtn2       "Host"
+  @mbtn3       "Cancel"
+
+  # button data
+  @btn-type1   "1"
+  @btn-type2   "1"
+  @btn-type3   "3"
+  @btn-type4   "1"
+  @btn-dst1    "221,36,241,56"
+  @btn-dst2    "247,36,267,56"
+  @btn-dst3    "44,127,213,142"
+  @btn-dst4    "10,158,30,178"
+
+  # text box data
+  @txt-dst1    "83,36,215,56"
+  @txt-dst2    "83,65,267,85"
+  @txt-dst3    "83,94,267,114"
+>3
+
+
+#----------------------------------------------------------
+# Begin network game
+#----------------------------------------------------------
+>4
+  @title       "Network Game"
+  @width       "469"
+  @height      "233"
+  @nnums       "2"
+  @nbtns       "3"
+  @ntxts       "0"
+  @mbtn1       "Play"
+  @mbtn2       "Cancel"
+  @mbtn3       "Exit"
+
+  # button data
+  @btn-type1   "1"
+  @btn-type2   "1"
+  @btn-type3   "3"
+  @btn-dst1    "180,207,200,227"
+  @btn-dst2    "206,207,226,227"
+  @btn-dst3    "367,169,439,178"
+
+  # num control data
+  @num-title1  "Sinkholes:"
+  @num-title2  "Games:"
+  @num-data1   "15,166,73,63,75,0,1"
+  @num-data2   "168,166,73,63,5,1,1"
+>4
+
+
+#----------------------------------------------------------
+# Load a game
+#----------------------------------------------------------
+>5
+  @title       "Load Game"
+  @width       "465"
+  @height      "216"
+  @nnums       "0"
+  @nbtns       "2"
+  @ntxts       "0"
+  @mbtn1       "Load"
+  @mbtn2       "Delete"
+  @mbtn3       "Cancel"
+
+  @btn-type1   "9"
+  @btn-type2   "9"
+
+  @btn-dst1    "442,56,450,65"
+  @btn-dst2    "442,163,450,172"
+>5
+
+
+#----------------------------------------------------------
+# Save a game
+#----------------------------------------------------------
+>6
+  @title       "Save Game As"
+  @width       "250"
+  @height      "148"
+  @nnums       "0"
+  @nbtns       "0"
+  @ntxts       "1"
+  @mbtn1       "#"
+  @mbtn2       "Save"
+  @mbtn3       "Cancel"
+  @txt-dst1    "55,75,195,95"
+>6
+
+
+#----------------------------------------------------------
+# Help Window
+#----------------------------------------------------------
+>7
+  @title       " "
+  @width       "450"
+  @height      "228"
+  @nnums       "0"
+  @nbtns       "0"
+  @ntxts       "0"
+  @mbtn1       "< Prev"
+  @mbtn2       "Next >"
+  @mbtn3       "Close"
+>7
+
+#----------------------------------------------------------
+# Music Options Window
+#----------------------------------------------------------
+>8
+  @title       "Music Options"
+  @width       "312"
+  @height      "169"
+  @nnums       "0"
+  @nbtns       "11"
+  @ntxts       "0"
+  @mbtn1       "#"
+  @mbtn2       "#"
+  @mbtn3       "Close"
+
+  # button data
+  @btn-type1   "3"
+  @btn-type2   "3"
+  @btn-type3   "3"
+  @btn-type4   "3"
+  @btn-type5   "3"
+  @btn-type6   "3"
+  @btn-type7   "3"
+  @btn-type8   "3"
+  @btn-type9   "8"
+  @btn-type10  "9"
+  @btn-type11  "9"
+
+  @btn-dst1    "13,41,114,51"
+  @btn-dst2    "13,65,114,75"
+  @btn-dst3    "13,89,114,99"
+  @btn-dst4    "13,113,114,123"
+  @btn-dst5    "141,42,152,52"
+  @btn-dst6    "141,59,152,69"
+  @btn-dst7    "141,76,152,86"
+  @btn-dst8    "141,93,152,103"
+  @btn-dst9    "149,117,279,129"
+  @btn-dst10   "285,42,294,53"
+  @btn-dst11   "285,94,294,105"
+>8
+
+
+#----------------------------------------------------------
+# Script Section
+#----------------------------------------------------------
+>script
+
+  VAR j$
+
+  VAR num.x$
+  VAR num.y$
+  VAR num.label$
+  VAR num.textw$
+  VAR num.max$
+  VAR num.min$
+  VAR num.incr$
+
+  # dialog header
+  LOAD cmndline
+  SAVE char[32]$ title   # dialog title
+  SAVE ulong$    width   # dialog width
+  SAVE ulong$    height  # dialog height
+  SAVE char[16]$ mbtn1   # main button 1
+  SAVE char[16]$ mbtn2   # main button 2
+  SAVE char[16]$ mbtn3   # main button 3
+  SAVE uint8$    nnums   # number control count
+  SAVE uint8$    nbtns   # custom button count
+  SAVE uint8$    ntxts   # text box count
+
+  # number controls
+  SET  j 1$
+  LOOP j nnums
+    ARAY num.x     num-data!j[0]$
+    ARAY num.y     num-data!j[1]$
+    ARAY num.label num-data!j[2]$
+    ARAY num.textw num-data!j[3]$
+    ARAY num.max   num-data!j[4]$
+    ARAY num.min   num-data!j[5]$
+    ARAY num.incr  num-data!j[6]$
+
+    SAVE char[16]$ num-title!j # title
+    SAVE long$     num.x       # x position
+    SAVE long$     num.y       # y position
+    SAVE long$     num.label   # lable width
+    SAVE long$     num.textw   # text width
+    SAVE long$     num.max     # max value
+    SAVE long$     num.min     # min value
+    SAVE long$     num.incr    # increment
+  NEXT j
+
+  # custom buttons
+  SET  j 1$
+  LOOP j nbtns
+    SAVE uint8$ btn-type!j  # button type
+    SAVE rect$  btn-dst!j   # destination rect
+  NEXT j
+
+  # text boxes
+  SET  j 1$
+  LOOP j ntxts
+    SAVE rect$ txt-dst!j   # destination rectangle
+  NEXT j
+
+>script

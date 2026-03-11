@@ -1,0 +1,366 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_PCT01               ICON    DISCARDABLE     "pct01.ICO"
+gri_die1                ICON    DISCARDABLE     "die1.ico"
+IDI_SMALL               ICON    DISCARDABLE     "SMALL.ICO"
+gri_question            ICON    DISCARDABLE     "question.ico"
+gri_error               ICON    DISCARDABLE     "error.ico"
+gri_flag                ICON    DISCARDABLE     "nono.ico"
+gri_darn                ICON    DISCARDABLE     "darn.ico"
+gri_die2                ICON    DISCARDABLE     "gri_die2.ico"
+gri_die3                ICON    DISCARDABLE     "gri_die3.ico"
+gri_die4                ICON    DISCARDABLE     "gri_die4.ico"
+gri_die5                ICON    DISCARDABLE     "gri_die5.ico"
+gri_die6                ICON    DISCARDABLE     "gri_die6.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_PCT01 MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New Game",                   gm_ng
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       gm_exit
+    END
+    POPUP "&Options"
+    BEGIN
+        POPUP "&Animation"
+        BEGIN
+            MENUITEM "&Fast Computer",              gm_fastani
+            MENUITEM "&Medium Computer",            gm_medani
+            MENUITEM "&Slow Computer",              gm_slowani
+        END
+        MENUITEM "&Sound Effects",              gm_sound
+        MENUITEM "&Music",                      gm_music
+        MENUITEM SEPARATOR
+        MENUITEM "Show Mo&ves",                 gm_showm
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&How To Play...",             gm_htp
+        MENUITEM "&About ...",                  gm_about
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_PCT01 ACCELERATORS MOVEABLE PURE 
+BEGIN
+    "?",            IDM_ABOUT,              ASCII,  ALT
+    "/",            IDM_ABOUT,              ASCII,  ALT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+grd_about DIALOG DISCARDABLE  22, 17, 220, 172
+STYLE DS_MODALFRAME | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "About Elimination"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,64,152,90,15,WS_GROUP
+    CONTROL         171,IDC_STATIC,"Static",SS_BITMAP,5,5,210,143
+END
+
+grd_custom DIALOG DISCARDABLE  0, 0, 155, 61
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Elimination"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "",gdi_buttonb,98,40,50,14
+    DEFPUSHBUTTON   "",gdi_buttona,45,40,50,14
+    ICON            "",gdi_icon,7,7,20,20
+    LTEXT           "",gdi_text,35,7,113,25
+END
+
+grd_roll DIALOG DISCARDABLE  0, 0, 109, 87
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Elimination"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDCANCEL,25,65,59,15
+    CTEXT           "",gdi_winer,7,42,95,17
+    ICON            "",gdi_die1,7,7,20,20
+    ICON            "",gdi_die2,7,23,20,20
+    LTEXT           "",gdi_name1,30,9,72,10
+    LTEXT           "",gdi_name2,30,25,72,10
+END
+
+grd_names DIALOG DISCARDABLE  0, 0, 201, 124
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Elimination"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Play",gdi_play,144,7,50,14
+    PUSHBUTTON      "Options",gdi_options,144,24,50,14
+    PUSHBUTTON      "How To Play",gdi_help,144,41,50,14
+    PUSHBUTTON      "Exit",IDCANCEL,144,58,50,14
+    ICON            IDI_PCT01,IDC_STATIC,7,7,20,20
+    LTEXT           "Welcome To Elimination.\nPlease type the players' names.",
+                    IDC_STATIC,33,9,106,17
+    EDITTEXT        gdi_name1,25,42,105,12,ES_AUTOHSCROLL
+    EDITTEXT        gdi_name2,25,58,105,12,ES_AUTOHSCROLL
+    CONTROL         "Computer Player",gdi_pcplayer,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,80,70,12
+    GROUPBOX        "Names",IDC_STATIC,7,31,128,45
+    CONTROL         158,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,11,
+                    43,11,10
+    CONTROL         159,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,11,
+                    59,11,10
+    CTEXT           "This program is Copyright © 1999 by Justin Hoffman.\nAll music is Copyright © 1997, 1998 by Joel Wenzel.",
+                    IDC_STATIC,7,99,187,18
+END
+
+grd_options DIALOG DISCARDABLE  0, 0, 235, 90
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Elimination Options"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",gdi_ok,178,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,178,23,50,14
+    CONTROL         "Sound Effects",gdi_sound,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,18,58,10
+    CONTROL         "Music",gdi_music,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    14,32,58,10
+    CONTROL         "Show Moves",gdi_sm,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,46,58,10
+    GROUPBOX        "General",IDC_STATIC,7,7,74,55
+    GROUPBOX        "Animation Speed",IDC_STATIC,88,7,83,55
+    CONTROL         "Fast Computer",gdi_fastpc,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,93,18,74,10
+    CONTROL         "Medium Computer",gdi_medpc,"Button",BS_AUTORADIOBUTTON,
+                    93,32,74,10
+    CONTROL         "Slow Computer",gdi_slowpc,"Button",BS_AUTORADIOBUTTON,
+                    93,46,74,10
+    LTEXT           "Number Of Sinkholes:",IDC_STATIC,7,70,71,9
+    EDITTEXT        gdi_numholes,79,69,20,12,ES_AUTOHSCROLL | ES_NUMBER
+END
+
+grd_htp DIALOG DISCARDABLE  0, 0, 241, 157
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Help"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDCANCEL,79,134,82,16
+    EDITTEXT        gdi_help,7,7,227,123,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_READONLY | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+grb_eff                 BITMAP  DISCARDABLE     "pjct01eff.bmp"
+grb_masks               BITMAP  DISCARDABLE     "pjct01masks.bmp"
+grb_paint               BITMAP  DISCARDABLE     "pjct01paint.bmp"
+grb_chip1               BITMAP  DISCARDABLE     "chip1.bmp"
+grb_chip2               BITMAP  DISCARDABLE     "chip2.bmp"
+grb_about               BITMAP  DISCARDABLE     "about.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+grs_select              WAVE    DISCARDABLE     "select.wav"
+grs_notturn             WAVE    DISCARDABLE     "notTurn.wav"
+grs_question            WAVE    DISCARDABLE     "question.wav"
+grs_error               WAVE    DISCARDABLE     "error.wav"
+grs_darn                WAVE    DISCARDABLE     "darn.wav"
+grs_explode             WAVE    DISCARDABLE     "explode.wav"
+grs_freeguy             WAVE    DISCARDABLE     "freeguy.wav"
+grs_sinkchip            WAVE    DISCARDABLE     "sinkChip.wav"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    grd_about, DIALOG
+    BEGIN
+        LEFTMARGIN, 5
+        RIGHTMARGIN, 215
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 167
+    END
+
+    grd_custom, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 148
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 54
+    END
+
+    grd_roll, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 102
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 80
+    END
+
+    grd_names, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 194
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 117
+    END
+
+    grd_options, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    grd_htp, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 234
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 150
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x29L
+#else
+ FILEFLAGS 0x28L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", " \0"
+            VALUE "CompanyName", "Justin Hoffman \0"
+            VALUE "FileDescription", "Elimination 1.0\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "elim1\0"
+            VALUE "LegalCopyright", "Copyright © 1999 by Justin Hoffman\0"
+            VALUE "LegalTrademarks", " \0"
+            VALUE "OriginalFilename", "elim1.exe\0"
+            VALUE "PrivateBuild", " \0"
+            VALUE "ProductName", "Elimination 1.0\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "SpecialBuild", " \0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

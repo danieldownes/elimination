@@ -1,0 +1,14 @@
+Remove opponents marbles to win the game.
+
+An original board game, the goal of the game is to remove all of your opponents' marbles from the board by jumping over them. Meanwhile, you are trying to avoid invisible sink holes that will swallow up your marbles. Two to four human/computer players can play.
+
+
+
+HOME PAGE:
+http://www.geocities.com/SiliconValley/Program/3490/elim/index.html
+
+DOWNLOAD URL
+http://www.geocities.com/SiliconValley/Program/3490/programs/elim2.zip
+
+SCREEN SHOT:
+http://www.geocities.com/SiliconValley/Program/3490/elim/screen_small.gif

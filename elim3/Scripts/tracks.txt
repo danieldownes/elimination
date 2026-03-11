@@ -1,0 +1,26 @@
+>main
+  @entries    "9"
+  @entry1     "Song 1"
+  @entry2     "Song 2"
+  @entry3     "Song 3"
+  @entry4     "Song 4"
+  @entry5     "Song 5"
+  @entry6     "Song 6"
+  @entry7     "Song 7"
+  @entry8     "Song 8"
+  @entry9     "Song 9"
+>main
+
+>script
+
+  VAR  i$
+  SET  i 1$
+  LOAD main$
+
+  SAVE long$ entries
+
+  LOOP i entries
+    SAVE char[16]$ entry!i
+  NEXT i
+
+>script
