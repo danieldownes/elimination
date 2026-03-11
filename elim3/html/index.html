@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Elimination III</title>
-<script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/timidity@0.4.0/dist/timidity.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; display: flex; justify-content: center; align-items: center; font-family: Arial, sans-serif; }
@@ -45,7 +45,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; d
         <div class="player-row"><span class="color-dot" style="background:#D70101"></span><label>Player 1</label><input type="text" id="pName0" value="Player 1"><select id="pType0"><option value="human">Human</option><option value="computer">Computer</option><option value="off">Off</option></select><select id="pTeam0"><option value="0">No Team</option><option value="1">Team A</option><option value="2">Team B</option></select></div>
         <div class="player-row"><span class="color-dot" style="background:#01A7A7"></span><label>Player 2</label><input type="text" id="pName1" value="Player 2"><select id="pType1"><option value="human">Human</option><option value="computer" selected>Computer</option><option value="off">Off</option></select><select id="pTeam1"><option value="0">No Team</option><option value="1">Team A</option><option value="2">Team B</option></select></div>
         <div class="player-row"><span class="color-dot" style="background:#D115BE"></span><label>Player 3</label><input type="text" id="pName2" value="Player 3"><select id="pType2"><option value="human">Human</option><option value="computer">Computer</option><option value="off" selected>Off</option></select><select id="pTeam2"><option value="0">No Team</option><option value="1">Team A</option><option value="2">Team B</option></select></div>
-        <div class="player-row"><span class="color-dot" style="background:#BCAB69"></span><label>Player 4</label><input type="text" id="pName3" value="Player 4"><select id="pType3"><option value="human">Human</option><option value="computer">Computer</option><option value="off" selected>Off</option></select><select id="pTeam3"><option value="0">No Team</option><option value="1">Team A</option><option value="2">Team B</option></select></div>
+        <div class="player-row"><span class="color-dot" style="background:#BCAB69"></span><label>Player 4</label><input type="text" id="pName3" value="Player 4"><select id="pType3"><option value="human" selected>Human</option><option value="computer">Computer</option><option value="off">Off</option></select><select id="pTeam3"><option value="0">No Team</option><option value="1">Team A</option><option value="2">Team B</option></select></div>
         <div class="spin-group"><label>Sinkholes:</label><input type="number" id="sinkCount" min="0" max="75" value="25"></div>
         <div class="spin-group"><label>Games:</label><input type="number" id="gameCount" min="1" max="5" value="1"></div>
         <div class="dlg-buttons"><button id="btnPlay">Play</button></div>
@@ -199,170 +199,13 @@ function playSound(name) {
 }
 
 // ============================================================
-// MIDI MUSIC - soundfont-player with real instrument samples
+// MIDI MUSIC - Timidity.js (WASM-based, supports pitch bends, volume fades)
 // ============================================================
 let musicOn = true, musicPlaying = false, currentSong = 0;
 const MUSIC_COUNT = 10;
-let mACtx = null, mGain = null;
-let mCh = new Array(16).fill(null); // channel state: {prg, notes:{}}
-let mEvents = [], mEvIdx = 0, mStartTime = 0;
-let mInterval = null, mNextSongTimeout = null;
-let mInstruments = {}; // cache: GM program number → soundfont instrument
-let mLoadingInstruments = {}; // loading promises
-
-// General MIDI program name mapping for soundfont-player
-const GM_NAMES = [
-  "acoustic_grand_piano","bright_acoustic_piano","electric_grand_piano","honkytonk_piano",
-  "electric_piano_1","electric_piano_2","harpsichord","clavinet",
-  "celesta","glockenspiel","music_box","vibraphone",
-  "marimba","xylophone","tubular_bells","dulcimer",
-  "drawbar_organ","percussive_organ","rock_organ","church_organ",
-  "reed_organ","accordion","harmonica","tango_accordion",
-  "acoustic_guitar_nylon","acoustic_guitar_steel","electric_guitar_jazz","electric_guitar_clean",
-  "electric_guitar_muted","overdriven_guitar","distortion_guitar","guitar_harmonics",
-  "acoustic_bass","electric_bass_finger","electric_bass_pick","fretless_bass",
-  "slap_bass_1","slap_bass_2","synth_bass_1","synth_bass_2",
-  "violin","viola","cello","contrabass",
-  "tremolo_strings","pizzicato_strings","orchestral_harp","timpani",
-  "string_ensemble_1","string_ensemble_2","synth_strings_1","synth_strings_2",
-  "choir_aahs","voice_oohs","synth_choir","orchestra_hit",
-  "trumpet","trombone","tuba","muted_trumpet",
-  "french_horn","brass_section","synth_brass_1","synth_brass_2",
-  "soprano_sax","alto_sax","tenor_sax","baritone_sax",
-  "oboe","english_horn","bassoon","clarinet",
-  "piccolo","flute","recorder","pan_flute",
-  "blown_bottle","shakuhachi","whistle","ocarina",
-  "lead_1_square","lead_2_sawtooth","lead_3_calliope","lead_4_chiff",
-  "lead_5_charang","lead_6_voice","lead_7_fifths","lead_8_bass__lead",
-  "pad_1_new_age","pad_2_warm","pad_3_polysynth","pad_4_choir",
-  "pad_5_bowed","pad_6_metallic","pad_7_halo","pad_8_sweep",
-  "fx_1_rain","fx_2_soundtrack","fx_3_crystal","fx_4_atmosphere",
-  "fx_5_brightness","fx_6_goblins","fx_7_echoes","fx_8_scifi",
-  "sitar","banjo","shamisen","koto",
-  "kalimba","bagpipe","fiddle","shanai",
-  "tinkle_bell","agogo","steel_drums","woodblock",
-  "taiko_drum","melodic_tom","synth_drum","reverse_cymbal",
-  "guitar_fret_noise","breath_noise","seashore","bird_tweet",
-  "telephone_ring","helicopter","applause","gunshot"
-];
-
-function parseMidi(buf) {
-  const d = new DataView(buf);
-  let p = 0;
-  const u8=()=>d.getUint8(p++), u16=()=>{const v=d.getUint16(p);p+=2;return v},
-        u32=()=>{const v=d.getUint32(p);p+=4;return v};
-  const vlq=()=>{let v=0;for(;;){const b=u8();v=(v<<7)|(b&0x7f);if(!(b&0x80))return v;}};
-  if(u32()!==0x4d546864)return null;
-  u32(); const fmt=u16(),nTrk=u16(),tpq=u16();
-  const evts=[];
-  for(let t=0;t<nTrk;t++){
-    if(u32()!==0x4d54726b){return null;}
-    const tLen=u32(); const tEnd=p+tLen; let tick=0, rs=0;
-    while(p<tEnd){
-      tick+=vlq();
-      let st=d.getUint8(p);
-      if(st<0x80){st=rs;}else{p++;if(st<0xF0)rs=st;}
-      const hi=st&0xf0, ch=st&0x0f;
-      if(hi===0x90){const n=u8(),v=u8();evts.push({tick,t:v>0?"on":"off",ch,n,v});}
-      else if(hi===0x80){const n=u8();u8();evts.push({tick,t:"off",ch,n,v:0});}
-      else if(hi===0xC0){evts.push({tick,t:"pc",ch,prg:u8()});}
-      else if(hi===0xB0){u8();u8();}
-      else if(hi===0xE0){u8();u8();}
-      else if(hi===0xD0){u8();}
-      else if(hi===0xA0){u8();u8();}
-      else if(st===0xFF){
-        const mt=u8(),ml=vlq();
-        if(mt===0x51&&ml===3){
-          const us=(d.getUint8(p)<<16)|(d.getUint8(p+1)<<8)|d.getUint8(p+2);
-          evts.push({tick,t:"tempo",us});
-        }
-        p+=ml;
-      }
-      else if(st===0xF0||st===0xF7){const sl=vlq();p+=sl;}
-      else { p=tEnd; break; }
-    }
-    p=tEnd;
-  }
-  evts.sort((a,b)=>a.tick-b.tick);
-  // Convert ticks to ms using tempo map
-  let curTempo=500000, lastTick=0, lastMs=0;
-  for(const e of evts){
-    e.ms = lastMs + (e.tick-lastTick)*(curTempo/tpq)/1000;
-    if(e.t==="tempo"){lastMs=e.ms; lastTick=e.tick; curTempo=e.us;}
-  }
-  return evts;
-}
-
-async function mLoadInstrument(prg) {
-  if(mInstruments[prg]) return mInstruments[prg];
-  if(mLoadingInstruments[prg]) return mLoadingInstruments[prg];
-  const name = GM_NAMES[prg] || "acoustic_grand_piano";
-  mLoadingInstruments[prg] = Soundfont.instrument(mACtx, name, {
-    soundfont: "MusyngKite",
-    gain: 0.6
-  }).then(inst => {
-    mInstruments[prg] = inst;
-    delete mLoadingInstruments[prg];
-    return inst;
-  }).catch(e => {
-    console.warn("Failed to load instrument:", name, e);
-    delete mLoadingInstruments[prg];
-    return null;
-  });
-  return mLoadingInstruments[prg];
-}
-
-function mNoteOn(ch, note, vel) {
-  if(!mACtx||!mGain) return;
-  mNoteOff(ch, note);
-  if(!mCh[ch]) mCh[ch] = {prg:0, notes:{}};
-  // Channel 9 = percussion, skip for now (soundfont-player doesn't handle GM percussion well)
-  if(ch === 9) return;
-  const prg = mCh[ch].prg || 0;
-  const inst = mInstruments[prg];
-  if(!inst) return;
-  const node = inst.play(note, mACtx.currentTime, {gain: (vel/127) * 0.8});
-  if(node) {
-    node.connect(mGain);
-    mCh[ch].notes[note] = node;
-  }
-}
-
-function mNoteOff(ch, note) {
-  if(!mCh[ch] || !mCh[ch].notes[note]) return;
-  try { mCh[ch].notes[note].stop(); } catch(e) {}
-  delete mCh[ch].notes[note];
-}
-
-function mStopAll() {
-  for(let c=0;c<16;c++){
-    if(!mCh[c]) continue;
-    for(const n in mCh[c].notes){
-      try { mCh[c].notes[n].stop(); } catch(e) {}
-    }
-  }
-  mCh = new Array(16).fill(null);
-}
-
-function mTick() {
-  if(!musicPlaying || !mEvents.length) return;
-  const now = performance.now() - mStartTime;
-  while(mEvIdx < mEvents.length && mEvents[mEvIdx].ms <= now){
-    const e = mEvents[mEvIdx++];
-    if(e.t === "on") mNoteOn(e.ch, e.n, e.v);
-    else if(e.t === "off") mNoteOff(e.ch, e.n);
-    else if(e.t === "pc"){
-      if(!mCh[e.ch]) mCh[e.ch] = {prg:0, notes:{}};
-      mCh[e.ch].prg = e.prg;
-      // Pre-load the instrument
-      mLoadInstrument(e.prg);
-    }
-  }
-  if(mEvIdx >= mEvents.length){
-    musicStop();
-    mNextSongTimeout = setTimeout(musicPlayNext, 500);
-  }
-}
+let mPlayer = null;
+let mNextSongTimeout = null;
+let mMidiBuffers = {}; // cache: song number → ArrayBuffer
 
 function loadMidiXHR(url, callback) {
   const xhr = new XMLHttpRequest();
@@ -374,36 +217,30 @@ function loadMidiXHR(url, callback) {
 }
 
 async function midiPlayFile(num) {
-  if(!mACtx){
-    mACtx = new (window.AudioContext || window.webkitAudioContext)();
-    mGain = mACtx.createGain();
-    mGain.gain.value = 0.5;
-    mGain.connect(mACtx.destination);
+  if(!mPlayer){
+    mPlayer = new Timidity("https://cdn.jsdelivr.net/npm/timidity@0.4.0/");
+    mPlayer.on("ended", function(){ mNextSongTimeout = setTimeout(musicPlayNext, 500); });
   }
-  if(mACtx.state === "suspended") await mACtx.resume();
-  mStopAll();
 
-  // Load MIDI file
-  loadMidiXHR("assets/music/music"+num+".mid", async function(buf) {
+  // Load MIDI file via XHR (works on file:// protocol)
+  const play = function(buf) {
+    const blob = new Blob([buf], {type: "audio/midi"});
+    const url = URL.createObjectURL(blob);
+    mPlayer.load(url);
+    mPlayer.on("playing", function onPlaying() {
+      mPlayer.removeListener("playing", onPlaying);
+      musicPlaying = true;
+      URL.revokeObjectURL(url);
+    });
+    mPlayer.play();
+  };
+
+  if(mMidiBuffers[num]) { play(mMidiBuffers[num]); return; }
+  loadMidiXHR("assets/music/music"+num+".mid", function(buf) {
     if(!buf){ console.warn("Failed to load music"+num+".mid"); return; }
-    const evts = parseMidi(buf);
-    if(!evts || !evts.length){ console.warn("MIDI parse failed for music"+num); return; }
-    console.log("MIDI loaded: music"+num+".mid, "+evts.length+" events, ~"+Math.round(evts[evts.length-1].ms/1000)+"s");
-
-    // Collect unique programs used and pre-load them
-    const progs = new Set();
-    for(const e of evts) {
-      if(e.t === "pc") progs.add(e.prg);
-    }
-    if(progs.size === 0) progs.add(0); // default piano
-    console.log("Loading instruments:", [...progs].map(p => GM_NAMES[p]));
-    await Promise.all([...progs].map(p => mLoadInstrument(p)));
-
-    // Start playback
-    mEvents = evts; mEvIdx = 0; mStartTime = performance.now();
-    if(mInterval) clearInterval(mInterval);
-    mInterval = setInterval(mTick, 16);
-    musicPlaying = true;
+    mMidiBuffers[num] = buf;
+    console.log("MIDI loaded: music"+num+".mid");
+    play(buf);
   });
 }
 
@@ -415,9 +252,9 @@ function musicPlayNext(){
 }
 function musicPlay(){ musicPlayNext(); }
 function musicStop(){
-  if(mInterval){ clearInterval(mInterval); mInterval = null; }
   if(mNextSongTimeout){ clearTimeout(mNextSongTimeout); mNextSongTimeout = null; }
-  mStopAll(); musicPlaying = false;
+  if(mPlayer){ try { mPlayer.pause(); } catch(e){} }
+  musicPlaying = false;
 }
 function musicToggle(){ if(musicPlaying) musicStop(); else musicPlay(); }
 
@@ -617,19 +454,45 @@ function drawMarbleSprite(col, row, player) {
     marbleX(col), marbleY(row) - 5, 25, 16);
 }
 
-function drawFreeMarbleSprite(col, row) {
+// Offscreen canvas for free marble "F" sprite with palette glow
+let freeMarbleCanvas = null;
+let freeMarbleCtx = null;
+let freeMarbleBaseData = null; // original pixel data
+const GLOW_COLOR = [0, 255, 0]; // green pixels in PNG = palette index 88
+
+function initFreeMarbleSprite() {
   if (!images.items || !images.items.complete) return;
-  // Pulsing glow border around free marble (original uses palette animation)
+  freeMarbleCanvas = document.createElement("canvas");
+  freeMarbleCanvas.width = 11; freeMarbleCanvas.height = 13;
+  freeMarbleCtx = freeMarbleCanvas.getContext("2d");
+  freeMarbleCtx.drawImage(images.items, 51, 40, 11, 13, 0, 0, 11, 13);
+  freeMarbleBaseData = freeMarbleCtx.getImageData(0, 0, 11, 13);
+}
+
+function drawFreeMarbleSprite(col, row) {
+  if (!freeMarbleCanvas) initFreeMarbleSprite();
+  if (!freeMarbleCanvas) return;
+
+  // Calculate glow color (same as original: palette animation on CLR_FREEBORDER)
   const gv = glowFrame > 25 ? 50 - glowFrame : glowFrame;
-  const r = Math.round(gv);
-  const g = Math.round(7 * gv);
-  const b = Math.round(10 * gv);
-  ctx.strokeStyle = `rgb(${r},${g},${b})`;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(marbleX(col) + 7.5, marbleY(row) - 5.5, 12, 14);
-  // Draw the "F" sprite
-  ctx.drawImage(images.items, 51, 40, 11, 13,
-    marbleX(col) + 8, marbleY(row) - 5, 11, 13);
+  const gr = Math.round(gv);
+  const gg = Math.min(255, Math.round(7 * gv));
+  const gb = Math.min(255, Math.round(10 * gv));
+
+  // Recolor green pixels to glow color
+  const imgData = freeMarbleCtx.createImageData(11, 13);
+  const src = freeMarbleBaseData.data;
+  const dst = imgData.data;
+  for (let i = 0; i < src.length; i += 4) {
+    if (src[i] === GLOW_COLOR[0] && src[i+1] === GLOW_COLOR[1] && src[i+2] === GLOW_COLOR[2] && src[i+3] > 0) {
+      dst[i] = gr; dst[i+1] = gg; dst[i+2] = gb; dst[i+3] = 255;
+    } else {
+      dst[i] = src[i]; dst[i+1] = src[i+1]; dst[i+2] = src[i+2]; dst[i+3] = src[i+3];
+    }
+  }
+  freeMarbleCtx.putImageData(imgData, 0, 0);
+
+  ctx.drawImage(freeMarbleCanvas, marbleX(col) + 8, marbleY(row) - 5);
 }
 
 function drawSinkholeSprite(col, row) {
