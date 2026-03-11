@@ -4,9 +4,7 @@ A faithful HTML5/JavaScript port of **Elimination III**, a turn-based strategy b
 
 ## Play Online
 
-**[Play Elimination III](https://USERNAME.github.io/REPO_NAME/)**
-
-> Replace the link above with your actual GitHub Pages URL after deployment.
+[![Play Now](https://img.shields.io/badge/Play%20Now-Elimination%20III-red?style=for-the-badge&logo=googlechrome&logoColor=white)](https://danieldownes.github.io/elimination/)
 
 ## About the Game
 
