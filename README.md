@@ -32,7 +32,7 @@ Elimination III is a multiplayer board game where 2-4 players compete on a 16x16
 
 ## Running Locally
 
-Simply open `index.html` in a modern web browser. No build step or server required - the game runs entirely client-side.
+Simply open `elim3/html/index.html` in a modern web browser. No build step or server required - the game runs entirely client-side.
 
 ## Credits
 
